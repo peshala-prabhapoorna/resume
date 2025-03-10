@@ -18,8 +18,26 @@ function isUnauthorized(access_token) {
     return unauthorized;
 }
 
-export function load( {url} ) {
+function logAccessTokenUsage(access_token, locals) {
+    return new Promise((resolve, reject) => {
+        const db = locals.db;
+        const timeLK = new Date().toLocaleString({ timeZone: "LK" });
+
+        const query = 'INSERT INTO token_usage(token, timestamp) VALUES (?, ?)'
+        db.run(query, [access_token, timeLK], (err) => {
+            if (err) {
+                reject(new Error(`${err}: Error inserting row`));
+                return;
+            }
+            resolve();
+        });
+    });
+}
+
+export async function load({ url, locals }) {
     const access_token = getAccessToken(url);
+    const insertPromise = logAccessTokenUsage(access_token, locals);
+
     if (!access_token) {
         error(400, {
             message: "Bad request! Access token not found."
@@ -31,5 +49,7 @@ export function load( {url} ) {
             message: "Unauthorized access token."
         });
     }
+
+    await insertPromise;
     return { resume };
 }
