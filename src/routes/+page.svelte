@@ -1,9 +1,9 @@
 <script>
-    import resume from '$lib/assets/resume.pdf';
+    let { data } = $props();
 </script>
 
 <iframe
     class="h-screen w-screen"
     title="Peshala Prabhapoorna's Resume"
-    src={resume}>
+    src={data.resume}>
 </iframe>
