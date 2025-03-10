@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-const logPath ='/var/log/resume-logs.sqlite'; 
+const logPath ='/home/prabhapoorna/var/log/resume-logs.sqlite';
 
 export async function handle({ event, resolve }) {
     if (!event.locals.db) {
